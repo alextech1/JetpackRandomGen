@@ -51,6 +51,18 @@
         android:layout_height="wrap_content"
         android:text="none" />
 
+    <TextView
+        android:id="@+id/meanNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="none" />
+
+    <TextView
+        android:id="@+id/modeNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="none" />
+
     <Button
         android:id="@+id/buttonGenerate"
         android:layout_width="wrap_content"

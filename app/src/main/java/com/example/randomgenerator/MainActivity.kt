@@ -1,5 +1,6 @@
 package com.example.randomgenerator
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
@@ -18,25 +19,26 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity() {
 
     private lateinit var btmNavigationView : BottomNavigationView
-    private var concat: Set<Int> = emptySet()
+    private var listOfAllNumbers: List<Int> = emptyList()
+    private var setOfNonDupNumbers: Set<Int> = emptySet()
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mainFragment=MainFragment()
         val favFragment=FavFragment()
+        val homeFragment=HomeFragment()
 
         //setCurrentFragment(mainFragment)
 
         btmNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)!!
         btmNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.home -> setCurrentFragment(mainFragment)
                 R.id.favorites -> setCurrentFragment(favFragment)
-
+                R.id.home -> setCurrentFragment(homeFragment)
             }
             true
         }
@@ -51,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         val numberGenerated4: TextView = findViewById(R.id.numberGenerated4)
         val numberGenerated5: TextView = findViewById(R.id.numberGenerated5)
         val collectedNumbers: TextView = findViewById(R.id.collectedNumbers)
+        val meanNumberTxt: TextView = findViewById(R.id.meanNumber)
+        val modeNumberTxt: TextView = findViewById(R.id.modeNumber)
+
 
 
         generateButton.setOnClickListener {
@@ -70,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 Random.nextInt(1..70)
             }.distinct().take(5).sorted().toSet()
 
-            concat = concatenate(
+            listOfAllNumbers = concatenate(
                 randomNumbers,
                 randomNumbers2,
                 randomNumbers3,
@@ -87,13 +92,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         selNumbers.setOnClickListener {
-            numberGenerated.text = "none"
+            /*numberGenerated.text = "none"
             numberGenerated2.text = "none"
             numberGenerated3.text = "none"
             numberGenerated4.text = "none"
-            numberGenerated5.text = "none"
-            collectedNumbers.text = concat.toString()
-            createAndAddView()
+            numberGenerated5.text = "none"*/
+            collectedNumbers.text = listOfAllNumbers.toString()
+            val mean = listOfAllNumbers.average()
+            meanNumberTxt.text = "Mean: ${mean.toString()}"
+
+
+            val modes = findModes(listOfAllNumbers)
+            modeNumberTxt.text = "Mode: ${modes.toString()}"
+
+
+            //createAndAddView()
 
         }
 
@@ -113,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         val root = findViewById<ConstraintLayout>(R.id.root)
         lateinit var button: Button
 
-        val array: IntArray = concat.toIntArray()
+        val array: IntArray = listOfAllNumbers.toIntArray()
 
         for ((index, i) in array.withIndex()) {
                 button = Button(this).apply {
@@ -137,6 +150,7 @@ class MainActivity : AppCompatActivity() {
 
 }
 
+//will remove duplicates in a list
 private fun Random.nextInt(range: IntRange): Int {
     return range.first + nextInt(range.last - range.first)
 }
@@ -147,8 +161,17 @@ private fun concatenate(
     randomNumbers3: Set<Int>,
     randomNumbers4: Set<Int>,
     randomNumbers5: Set<Int>
-): Set<Int> {
-    return randomNumbers + randomNumbers2 + randomNumbers3 + randomNumbers4 + randomNumbers5
+): List<Int> {
+    return randomNumbers.toList() + randomNumbers2.toList() + randomNumbers3.toList() +
+            randomNumbers4.toList() + randomNumbers5.toList()
 }
 
+private fun <T> findModes(list: List<T>): List<T> {
+    if (list.isEmpty()) return emptyList()
+
+    val counts = list.groupingBy { it }.eachCount()
+    val maxCount = counts.values.maxOrNull() ?: 0
+
+    return counts.filterValues { it == maxCount }.keys.toList()
+}
 
