@@ -18,7 +18,7 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var btmNavigationView : BottomNavigationView
+    //private lateinit var btmNavigationView : BottomNavigationView
     private var listOfAllNumbers: List<Int> = emptyList()
     private var setOfNonDupNumbers: Set<Int> = emptySet()
 
@@ -34,14 +34,14 @@ class MainActivity : AppCompatActivity() {
 
         //setCurrentFragment(mainFragment)
 
-        btmNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)!!
+        /*btmNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)!!
         btmNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.favorites -> setCurrentFragment(favFragment)
                 R.id.home -> setCurrentFragment(homeFragment)
             }
             true
-        }
+        }*/
 
 
         val generateButton: Button = findViewById(R.id.buttonGenerate)
@@ -150,7 +150,6 @@ class MainActivity : AppCompatActivity() {
 
 }
 
-//will remove duplicates in a list
 private fun Random.nextInt(range: IntRange): Int {
     return range.first + nextInt(range.last - range.first)
 }
