@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val favFragment=FavFragment()
-        val homeFragment=HomeFragment()
+        //val favFragment=FavFragment()
+        //val homeFragment=HomeFragment()
 
         //setCurrentFragment(mainFragment)
 
