@@ -10,167 +10,95 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import com.example.randomgenerator.ui.theme.GreenJC
+import com.example.randomgenerator.ui.theme.MyAppTheme
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    //private lateinit var btmNavigationView : BottomNavigationView
-    private var listOfAllNumbers: List<Int> = emptyList()
-    private var setOfNonDupNumbers: Set<Int> = emptySet()
-
-
-
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        //val favFragment=FavFragment()
-        //val homeFragment=HomeFragment()
-
-        //setCurrentFragment(mainFragment)
-
-        /*btmNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)!!
-        btmNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.favorites -> setCurrentFragment(favFragment)
-                R.id.home -> setCurrentFragment(homeFragment)
+        setContent {
+            MyAppTheme {
+                Surface(
+                    //modifier = Modifier.fillMaxSize(),
+                    //color = MaterialTheme.colorScheme.background
+                )
+                {
+                    MyBottomAppBar()
+                }
             }
-            true
-        }*/
-
-
-        val generateButton: Button = findViewById(R.id.buttonGenerate)
-        val selNumbers: Button = findViewById(R.id.selectNumbers)
-
-        val numberGenerated: TextView = findViewById(R.id.numberGenerated)
-        val numberGenerated2: TextView = findViewById(R.id.numberGenerated2)
-        val numberGenerated3: TextView = findViewById(R.id.numberGenerated3)
-        val numberGenerated4: TextView = findViewById(R.id.numberGenerated4)
-        val numberGenerated5: TextView = findViewById(R.id.numberGenerated5)
-        val collectedNumbers: TextView = findViewById(R.id.collectedNumbers)
-        val meanNumberTxt: TextView = findViewById(R.id.meanNumber)
-        val modeNumberTxt: TextView = findViewById(R.id.modeNumber)
-
-
-
-        generateButton.setOnClickListener {
-            val randomNumbers = generateSequence {
-                Random.nextInt(1..70)
-            }.distinct().take(5).sorted().toSet()
-            val randomNumbers2 = generateSequence {
-                Random.nextInt(1..70)
-            }.distinct().take(5).sorted().toSet()
-            val randomNumbers3 = generateSequence {
-                Random.nextInt(1..70)
-            }.distinct().take(5).sorted().toSet()
-            val randomNumbers4 = generateSequence {
-                Random.nextInt(1..70)
-            }.distinct().take(5).sorted().toSet()
-            val randomNumbers5 = generateSequence {
-                Random.nextInt(1..70)
-            }.distinct().take(5).sorted().toSet()
-
-            listOfAllNumbers = concatenate(
-                randomNumbers,
-                randomNumbers2,
-                randomNumbers3,
-                randomNumbers4,
-                randomNumbers5
-            )
-
-
-            numberGenerated.text = randomNumbers.toString()
-            numberGenerated2.text = randomNumbers2.toString()
-            numberGenerated3.text = randomNumbers3.toString()
-            numberGenerated4.text = randomNumbers4.toString()
-            numberGenerated5.text = randomNumbers5.toString()
         }
-
-        selNumbers.setOnClickListener {
-            /*numberGenerated.text = "none"
-            numberGenerated2.text = "none"
-            numberGenerated3.text = "none"
-            numberGenerated4.text = "none"
-            numberGenerated5.text = "none"*/
-            collectedNumbers.text = listOfAllNumbers.toString()
-            val mean = listOfAllNumbers.average()
-            meanNumberTxt.text = "Mean: ${mean.toString()}"
-
-
-            val modes = findModes(listOfAllNumbers)
-            modeNumberTxt.text = "Mode: ${modes.toString()}"
-
-
-            //createAndAddView()
-
-        }
-
-
 
     }
+}
 
-    private fun setCurrentFragment(fragment:Fragment)=
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment,fragment)
-            commit()
-        }
+//test
+@Composable
+fun MyBottomAppBar() {
+    val navController = rememberNavController()
 
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { innerPadding ->
 
-    private fun createAndAddView()
-    {
-        val root = findViewById<ConstraintLayout>(R.id.root)
-        lateinit var button: Button
-
-        val array: IntArray = listOfAllNumbers.toIntArray()
-
-        for ((index, i) in array.withIndex()) {
-                button = Button(this).apply {
-                layoutParams = ViewGroup.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)
-                id = index + 1
-                text = i.toString()
-                    setOnClickListener {
-                        Toast.makeText(this@MainActivity, "Clicked $i", Toast.LENGTH_SHORT).show()
-                    }
-
+        val graph =
+            navController.createGraph(startDestination = Screens.Home.screen) {
+                composable(route = Screens.Home.screen) {
+                    Home()
+                }
+                composable(route = Screens.Search.screen) {
+                    Search()
+                }
+                composable(route = Screens.Profile.screen) {
+                    Profile()
+                }
             }
-            root.addView(button)
-
-        }
-        val flow = findViewById<Flow>(R.id.flow)
-        flow.referencedIds = (1 .. array.size).toList().toIntArray()
-
+        NavHost(
+            navController = navController,
+            graph = graph,
+            modifier = Modifier.padding(innerPadding)
+        )
 
     }
-
-
 }
 
-private fun Random.nextInt(range: IntRange): Int {
-    return range.first + nextInt(range.last - range.first)
-}
-
-private fun concatenate(
-    randomNumbers: Set<Int>,
-    randomNumbers2: Set<Int>,
-    randomNumbers3: Set<Int>,
-    randomNumbers4: Set<Int>,
-    randomNumbers5: Set<Int>
-): List<Int> {
-    return randomNumbers.toList() + randomNumbers2.toList() + randomNumbers3.toList() +
-            randomNumbers4.toList() + randomNumbers5.toList()
-}
-
-private fun <T> findModes(list: List<T>): List<T> {
-    if (list.isEmpty()) return emptyList()
-
-    val counts = list.groupingBy { it }.eachCount()
-    val maxCount = counts.values.maxOrNull() ?: 0
-
-    return counts.filterValues { it == maxCount }.keys.toList()
-}
 
