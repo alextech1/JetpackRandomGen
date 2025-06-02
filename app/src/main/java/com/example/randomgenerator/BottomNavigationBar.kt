@@ -37,9 +37,9 @@ fun BottomNavigationBar(
             route = Screens.Profile.screen
         ),
         NavigationItem(
-            title = "Cart",
+            title = "Search",
             icon = Icons.Default.Search,
-            route = Screens.Profile.screen
+            route = Screens.Search.screen
         )
     )
 

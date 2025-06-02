@@ -85,11 +85,11 @@ fun MyBottomAppBar() {
                 composable(route = Screens.Home.screen) {
                     Home()
                 }
-                composable(route = Screens.Search.screen) {
-                    Search()
-                }
                 composable(route = Screens.Profile.screen) {
                     Profile()
+                }
+                composable(route = Screens.Search.screen) {
+                    Search()
                 }
             }
         NavHost(
